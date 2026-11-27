@@ -34,6 +34,42 @@ def home():
 def get_users():
     return users
 
+# PUT: Update an existing user
+@app.put("/users/{user_id}")
+def update_user(user_id: int, user: UserCreate):
+
+    # Find the user
+    for existing_user in users:
+
+        if existing_user["id"] == user_id:
+
+            # Check duplicate email
+            for other_user in users:
+                if (
+                    other_user["id"] != user_id
+                    and other_user.get("email") == user.email
+                ):
+                    raise HTTPException(
+                        status_code=409,
+                        detail="Email already exists"
+                    )
+
+            # Update user details
+            existing_user["name"] = user.name
+            existing_user["email"] = user.email
+            existing_user["role"] = user.role
+
+            return {
+                "message": "User updated successfully",
+                "user": existing_user
+            }
+
+    raise HTTPException(
+        status_code=404,
+        detail="User not found"
+    )
+
+
 
 # POST: Create a new user
 @app.post("/users", status_code=201)
