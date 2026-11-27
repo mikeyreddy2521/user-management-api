@@ -1,6 +1,7 @@
 
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi import HTTPException
 
 app = FastAPI()
 
@@ -37,6 +38,17 @@ def get_users():
 # POST: Create a new user
 @app.post("/users", status_code=201)
 def create_user(user: UserCreate):
+
+    @app.post("/users", status_code=201)
+def create_user(user: UserCreate):
+
+    # Check whether email already exists
+    for existing_user in users:
+        if existing_user.get("email") == user.email:
+            raise HTTPException(
+                status_code=409,
+                detail="Email already exists"
+            )
 
     new_id = max(u["id"] for u in users) + 1
 
