@@ -71,6 +71,29 @@ def update_user(user_id: int, user: UserCreate):
 
 
 
+# DELETE: Remove an existing user
+@app.delete("/users/{user_id}")
+def delete_user(user_id: int):
+
+    # Find the user
+    for existing_user in users:
+
+        if existing_user["id"] == user_id:
+
+            # Remove user from list
+            users.remove(existing_user)
+
+            return {
+                "message": "User deleted successfully",
+                "user": existing_user
+            }
+
+    # If user does not exist
+    raise HTTPException(
+        status_code=404,
+        detail="User not found"
+    )
+
 # POST: Create a new user
 @app.post("/users", status_code=201)
 def create_user(user: UserCreate):
@@ -96,6 +119,7 @@ def create_user(user: UserCreate):
 
     # Add user to list
     users.append(new_user)
+    
 
     return {
         "message": "User created successfully",
