@@ -1,10 +1,11 @@
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-# from fastapi import FastAPI, HTTPException
-# from pydantic import BaseModel
-from database import engine, Base
+from sqlalchemy.orm import Session
+from database import engine, Base, SessionLocal
 import models
+# from database import engine, Base
+# import models
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
 
