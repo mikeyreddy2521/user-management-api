@@ -28,7 +28,19 @@ users = [
     {"id": 2, "name": "Rahul", "role": "Developer"},
     {"id": 3, "name": "Priya", "role": "Tester"}
 ]
+@app.get("/users")
+def get_users(db: Session = Depends(get_db)):
+    users = db.query(models.User).all()
 
+    return [
+        {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "role": user.role
+        }
+        for user in users
+    ]
 
 # GET: Welcome endpoint
 @app.get("/")
@@ -39,10 +51,10 @@ def home():
     }
 
 
-# GET: Retrieve all users
-@app.get("/users")
-def get_users():
-    return users
+# # GET: Retrieve all users
+# @app.get("/users")
+# def get_users():
+#     return users
 
 # PUT: Update an existing user
 @app.put("/users/{user_id}")
