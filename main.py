@@ -42,26 +42,26 @@ def create_user(user: UserCreate):
     @app.post("/users", status_code=201)
 def create_user(user: UserCreate):
 
-    # Check whether email already exists
-    for existing_user in users:
-        if existing_user.get("email") == user.email:
-            raise HTTPException(
-                status_code=409,
-                detail="Email already exists"
-            )
+ # Check whether email already exists
+for existing_user in users:
+    if existing_user.get("email") == user.email:
+        raise HTTPException(
+            status_code=409,
+            detail="Email already exists"
+        )
 
-    new_id = max(u["id"] for u in users) + 1
+new_id = max(u["id"] for u in users) + 1
 
-    new_user = {
-        "id": new_id,
-        "name": user.name,
-        "email": user.email,
-        "role": user.role
-    }
+new_user = {
+    "id": new_id,
+    "name": user.name,
+    "email": user.email,
+    "role": user.role
+}
 
-    users.append(new_user)
+users.append(new_user)
 
-    return {
-        "message": "User created successfully",
-        "user": new_user
-    }
+return {
+    "message": "User created successfully",
+    "user": new_user
+}
