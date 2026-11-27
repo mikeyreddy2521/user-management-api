@@ -88,51 +88,25 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 
 
 # PUT: Update an existing user
-@app.put("/users/{user_id}")
-def update_user(
-    user_id: int,
-    user: UserCreate,
-    db: Session = Depends(get_db)
-):
+@app.get("/users/{user_id}")
+def get_user(user_id: int, db: Session = Depends(get_db)):
 
-    existing_user = db.query(models.User).filter(
+    user = db.query(models.User).filter(
         models.User.id == user_id
     ).first()
 
-    if existing_user is None:
+    if user is None:
         raise HTTPException(
             status_code=404,
             detail="User not found"
         )
 
-    duplicate_email = db.query(models.User).filter(
-        models.User.email == user.email,
-        models.User.id != user_id
-    ).first()
-
-    if duplicate_email:
-        raise HTTPException(
-            status_code=409,
-            detail="Email already exists"
-        )
-
-    existing_user.name = user.name
-    existing_user.email = user.email
-    existing_user.role = user.role
-
-    db.commit()
-    db.refresh(existing_user)
-
     return {
-        "message": "User updated successfully",
-        "user": {
-            "id": existing_user.id,
-            "name": existing_user.name,
-            "email": existing_user.email,
-            "role": existing_user.role
-        }
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "role": user.role
     }
-
 
 # DELETE: Remove an existing user
 @app.delete("/users/{user_id}")
