@@ -1,9 +1,12 @@
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-
+# from fastapi import FastAPI, HTTPException
+# from pydantic import BaseModel
+from database import engine, Base
+import models
 app = FastAPI()
-
+Base.metadata.create_all(bind=engine)
 
 # Define the structure of incoming user data
 class UserCreate(BaseModel):
